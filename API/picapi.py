@@ -24,13 +24,13 @@ def allowed_file(filename):
 def upload_image():
     # Check if the request has the file part
     if 'image' not in request.files:
-        return jsonify({'error': 'No image part in the request'}), 400
+        return jsonify({'error': 'Flask: No image part in the request'}), 400
     
     file = request.files['image']
     
     # If user does not select a file, browser might submit an empty file
     if file.filename == '':
-        return jsonify({'error': 'No image selected for uploading'}), 400
+        return jsonify({'error': 'Flask: No image selected for uploading'}), 400
     
     # Check if the file is allowed
     if file and allowed_file(file.filename):
@@ -50,7 +50,7 @@ def upload_image():
             'original_filename': original_filename
         }), 200
     else:
-        return jsonify({'error': 'File type not allowed'}), 400
+        return jsonify({'error': 'Flask: File type not allowed'}), 400
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
