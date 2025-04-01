@@ -210,12 +210,17 @@
                 body: formData
             })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
+                // Parse the JSON response regardless of status code
+                return response.json().then(data => {
+                    // Add status to the data object
+                    return { ...data, status: response.status, ok: response.ok };
+                });
             })
             .then(data => {
+                if (!data.ok) {
+                    // Handle error responses (4xx, 5xx)
+                    throw new Error(data.error || 'Upload failed');
+                }
                 showStatus(`Image uploaded successfully: ${data.message || 'Success'}`, 'success');
             })
             .catch(error => {
