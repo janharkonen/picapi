@@ -206,7 +206,7 @@
             formData.append('image', file);
             
             fetch(API_URL, {
-                method: 'P0ST',
+                method: 'POST',
                 body: formData
             })
             .then(response => {
