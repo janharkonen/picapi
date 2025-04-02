@@ -48,8 +48,8 @@ def upload_image():
     else:
         return jsonify({'error': 'Flask: File type not allowed'}), 400
 
-@app.route('/api/getallpics', methods=['GET'])
-def get_all_pics():
+@app.route('/api/getallpicmetadata', methods=['GET'])
+def get_all_pic_metadata():
     pic_metadata = db_interface.get_metadata()
     return jsonify(pic_metadata), 200
 
