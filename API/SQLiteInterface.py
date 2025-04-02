@@ -23,7 +23,7 @@ class SQLiteInterface:
         self.conn.commit()
         self.conn.close()
     
-    def save(self, uuid: str, filename: str):
+    def save(self, unique_filename: str, original_filename: str):
         self.conn = sqlite3.connect(self.db_path)
         self.cursor = self.conn.cursor()
         self.cursor.execute(
@@ -31,7 +31,7 @@ class SQLiteInterface:
             INSERT INTO PIC_METADATA (uuid, original_filename)
             VALUES (?, ?)
             ''',
-            (uuid, filename)
+            (unique_filename, original_filename)
         )
         self.conn.commit()
         self.conn.close()

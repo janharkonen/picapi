@@ -1,5 +1,4 @@
 import os
-from werkzeug.utils import secure_filename
 from werkzeug.datastructures.file_storage import FileStorage
 
 class ImageBucket:
@@ -9,12 +8,7 @@ class ImageBucket:
         self.pics_path = os.path.join(pics_path)
         os.makedirs(self.pics_path, exist_ok=True)
     
-    def save(self, uuid: str, file: FileStorage):
-        # Generate a unique filename to prevent overwriting
-        original_filename = secure_filename(file.filename)
-        file_extension = original_filename.rsplit('.', 1)[1].lower()
-        unique_filename = f"{uuid}.{file_extension}"
-
+    def save(self, unique_filename: str, file: FileStorage):
         # Save the file
         file_path = os.path.join(self.pics_path, unique_filename)
         file.save(file_path)
