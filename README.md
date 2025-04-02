@@ -65,6 +65,24 @@ server {
 }
 ```
 
+### SQLite
+ - To run SQLite database, use
+```bash
+sqlite3 PicMetadata.db
+```
+ - Within the CLI you see all tables with
+```bash
+.tables
+```
+ - And to see content of a table just write
+```bash
+SELECT * FROM PIC_METADATA
+```
+ - The output is ugly so input
+```bash
+.headers on
+.mode column
+```
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
