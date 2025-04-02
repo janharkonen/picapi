@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 from SQLiteInterface import SQLiteInterface
 from ImageBucket import ImageBucket
 
+
 app = Flask(__name__)
 # Enable CORS for all routes
 CORS(app)
@@ -58,6 +59,11 @@ def get_all_pic_metadata():
 def get_picture(filename: str):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     pics_dir = os.path.join(base_dir, '..', 'Pics')
+    if request.args:
+        extend_background = request.args.get('XBG')
+        if extend_background is not None:
+            #edit this
+            return send_from_directory(pics_dir, filename)
     return send_from_directory(pics_dir, filename)
 
 if __name__ == '__main__':
