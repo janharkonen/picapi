@@ -1,6 +1,7 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import uuid
+import os
 from werkzeug.utils import secure_filename
 from SQLiteInterface import SQLiteInterface
 from ImageBucket import ImageBucket
@@ -52,6 +53,12 @@ def upload_image():
 def get_all_pic_metadata():
     pic_metadata = db_interface.get_metadata()
     return jsonify(pic_metadata), 200
+
+@app.route('/api/pics/<filename>', methods=['GET'])
+def get_picture(filename: str):
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    pics_dir = os.path.join(base_dir, '..', 'Pics')
+    return send_from_directory(pics_dir, filename)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
