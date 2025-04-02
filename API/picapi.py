@@ -48,5 +48,24 @@ def upload_image():
     else:
         return jsonify({'error': 'Flask: File type not allowed'}), 400
 
+@app.route('/api/getallpics', methods=['GET'])
+def get_all_pics():
+    pic_metadata = [
+        {
+            'uuid': '123asd',
+            'original_name': 'name4444'
+        },
+        {
+            'uuid': '456qwe',
+            'original_name': 'name2'
+        },
+        {
+            'uuid': '789qwe',
+            'original_name': 'name3'
+        },
+    ]
+    pic_metadata = db_interface.get_metadata()
+    return jsonify(pic_metadata), 200
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

@@ -88,6 +88,7 @@
             background-color: #f8d7da;
             color: #721c24;
         }
+
     </style>
 </head>
 <body>
@@ -104,6 +105,7 @@
     <div id="preview"></div>
     
     <div id="status" style="display: none;"></div>
+    <div id="piclist"></div>
     
     <script>
         // DOM Elements
@@ -112,12 +114,15 @@
         const uploadButton = document.getElementById('upload-button');
         const preview = document.getElementById('preview');
         const status = document.getElementById('status');
+        const piclist = document.getElementById('piclist');
         
         // API endpoint
         // DEVELOMENT
-        // const API_URL = 'http://localhost:5000/api/upload';
+        // const API_URL_UPLOAD = 'http://localhost:5000/api/upload';
+        // const API_URL_GET = 'http://localhost:5000/api/getallpics';
         // PRODUCTION
-        const API_URL = 'https://picapi.janharkonen.fi/api/upload';
+        const API_URL_UPLOAD = 'https://picapi.janharkonen.fi/api/upload';
+        const API_URL_GET = 'https://picapi.janharkonen.fi/api/getallpics';
         
         // Handle drag and drop events
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -149,6 +154,8 @@
         // Handle dropped files
         dropArea.addEventListener('drop', handleDrop, false);
         
+        displayUploadedPics();
+
         function handleDrop(e) {
             const dt = e.dataTransfer;
             const files = dt.files;
@@ -208,7 +215,7 @@
             const formData = new FormData();
             formData.append('image', file);
             
-            fetch(API_URL, {
+            fetch(API_URL_UPLOAD, {
                 method: 'POST',
                 body: formData
             })
@@ -225,6 +232,7 @@
                     throw new Error(data.error || 'Upload failed');
                 }
                 showStatus(`Image uploaded successfully: ${data.message || 'Success'}`, 'success');
+                displayUploadedPics()
             })
             .catch(error => {
                 showStatus(`Upload failed: ${error.message}`, 'error');
@@ -242,6 +250,33 @@
             setTimeout(() => {
                 status.style.display = 'none';
             }, 5000);
+        }
+        // Display uploaded pics
+        function displayUploadedPics() {
+            
+            piclist.innerHTML = '';
+            fetch(API_URL_GET, {
+                method: 'GET',
+                payload: 'hash123123123'
+            })
+            .then(response => {
+                // Parse the JSON response regardless of status code
+                return response.json().then(data => {
+                    data.forEach((row, i) =>{
+                        console.log(row)
+                        console.log(i)
+                        const piclistItem = document.createElement('p')
+                        piclistItem.textContent = String(i+1) + '. ' + row['original_name']
+                        piclistItem.id = row['uuid']
+                        piclist.appendChild(piclistItem)
+                    })
+                });
+            })
+            .catch(error => {
+                showStatus(`Item fetching failed: ${error.message}`, 'error');
+                console.error('Error:', error);
+            });
+
         }
     </script>
 </body>
