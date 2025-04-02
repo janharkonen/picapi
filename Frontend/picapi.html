@@ -88,6 +88,16 @@
             background-color: #f8d7da;
             color: #721c24;
         }
+        .picMetadata {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 4px;
+            background-color: #abd5f1;
+            width: max-content;
+        }
+        .picMetadata:hover {
+            background-color: #6ab2e2;
+        }
 
     </style>
 </head>
@@ -262,14 +272,17 @@
             .then(response => {
                 // Parse the JSON response regardless of status code
                 return response.json().then(data => {
+                    
                     data.forEach((row, i) =>{
                         console.log(row)
                         console.log(i)
                         console.log(row['original_filename'])
-                        
-                        const piclistItem = document.createElement('p')
-                        piclistItem.textContent = String(i+1) + '. ' + row['original_filename']
-                        piclistItem.id = row['uuid']
+                        const piclistItem = document.createElement('li')
+                        const piclistItemButton = document.createElement('button')
+                        piclistItemButton.textContent = String(i+1) + '. ' + row['original_filename']
+                        piclistItemButton.id = row['uuid']
+                        piclistItemButton.className = 'picMetadata'
+                        piclistItem.appendChild(piclistItemButton)
                         piclist.appendChild(piclistItem)
                     })
                 });
