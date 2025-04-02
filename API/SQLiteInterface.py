@@ -35,3 +35,26 @@ class SQLiteInterface:
         )
         self.conn.commit()
         self.conn.close()
+    
+    def get_metadata(self) -> list[dict]:
+        self.conn = sqlite3.connect(self.db_path)
+        self.cursor = self.conn.cursor()
+        self.cursor.execute(
+            '''
+            SELECT uuid, original_filename
+            FROM PIC_METADATA
+            '''
+        )
+        rows = self.cursor.fetchall()
+        self.conn.close()
+        
+        metadata = [
+            {
+                'uuid': row[0],
+                'original_filename': row[1],
+            }
+            for row in rows
+        ]
+        metadata.reverse()
+
+        return metadata

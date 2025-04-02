@@ -265,8 +265,10 @@
                     data.forEach((row, i) =>{
                         console.log(row)
                         console.log(i)
+                        console.log(row['original_filename'])
+                        
                         const piclistItem = document.createElement('p')
-                        piclistItem.textContent = String(i+1) + '. ' + row['original_name']
+                        piclistItem.textContent = String(i+1) + '. ' + row['original_filename']
                         piclistItem.id = row['uuid']
                         piclist.appendChild(piclistItem)
                     })
