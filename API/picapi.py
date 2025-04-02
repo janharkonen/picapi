@@ -8,7 +8,7 @@ from ImageBucket import ImageBucket
 app = Flask(__name__)
 # Enable CORS for all routes
 CORS(app)
-sqlite_interface = SQLiteInterface()
+db_interface = SQLiteInterface()
 image_bucket = ImageBucket()
 # Configuration
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -36,7 +36,7 @@ def upload_image():
             unique_filename = f"{unique_id}.{file_extension}"
             
             image_bucket.save(unique_filename, file)
-            sqlite_interface.save(unique_filename, file.filename)
+            db_interface.save(unique_filename, file.filename)
             ## Return success response
             return jsonify({
                 'message': 'Image uploaded successfully',
