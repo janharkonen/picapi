@@ -114,7 +114,10 @@
         const status = document.getElementById('status');
         
         // API endpoint
-        const API_URL = 'http://localhost:5000/api/upload'; // Update with your actual API URL
+        // DEVELOMENT
+        // const API_URL = 'http://localhost:5000/api/upload';
+        // PRODUCTION
+        const API_URL = 'https://picapi.janharkonen.fi/api/upload';
         
         // Handle drag and drop events
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
