@@ -1,30 +1,37 @@
 import os
 
-base_dir = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(base_dir, '..', 'Database', 'PicMetadata.db')
 import sqlite3
 
 class SQLiteInterface:
     def __init__(self):
-        self.conn = sqlite3.connect(db_path)
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        db_dir = os.path.join(base_dir, '..', 'Database')
+        os.makedirs(db_dir, exist_ok=True)
+        self.db_path = os.path.join(db_dir, 'PicMetadata.db')
+        
+        self.conn = sqlite3.connect(self.db_path)
         self.cursor = self.conn.cursor()
         self.cursor.execute(
             '''
             CREATE TABLE IF NOT EXISTS PIC_METADATA (
                 uuid TEXT PRIMARY KEY,
-                filename TEXT NOT NULL,
+                original_filename TEXT NOT NULL,
                 upload_date DATETIME DEFAULT CURRENT_TIMESTAMP
             )
             '''
         )
         self.conn.commit()
+        self.conn.close()
     
     def save(self, uuid: str, filename: str):
+        self.conn = sqlite3.connect(self.db_path)
+        self.cursor = self.conn.cursor()
         self.cursor.execute(
             '''
-            INSERT INTO PIC_METADATA (uuid, filename)
+            INSERT INTO PIC_METADATA (uuid, original_filename)
             VALUES (?, ?)
             ''',
             (uuid, filename)
         )
         self.conn.commit()
+        self.conn.close()
