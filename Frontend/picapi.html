@@ -278,15 +278,12 @@
                 return response.json().then(data => {
                     
                     data.forEach((row, i) =>{
-                        console.log(row)
-                        console.log(i)
-                        console.log(row['original_filename'])
                         const piclistItem = document.createElement('li')
                         const piclistItemButton = document.createElement('button')
                         piclistItemButton.textContent = String(i+1) + '. ' + row['original_filename']
                         piclistItemButton.id = row['uuid']
                         piclistItemButton.className = 'picMetadata'
-                        piclistItem.appendChild(piclistItemButton)
+                        piclistItemButton.onclick = () => copyImageLinkToClipboard(row['uuid']);                       piclistItem.appendChild(piclistItemButton)
                         piclist.appendChild(piclistItem)
                     })
                 });
@@ -296,6 +293,18 @@
                 console.error('Error:', error);
             });
 
+        }
+
+        function copyImageLinkToClipboard(uuid) {
+            const imageUrl = `https://picapi.janharkonen.fi/api/pics/${uuid}`;
+            navigator.clipboard.writeText(imageUrl)
+                .then(() => {
+                    showStatus(`URL copied to clipboard: ${imageUrl}`, 'success');
+                })
+                .catch(err => {
+                    showStatus('Failed to copy URL to clipboard', 'error');
+                    console.error('Error copying text: ', err);
+                });
         }
     </script>
 </body>
