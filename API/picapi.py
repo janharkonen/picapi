@@ -61,8 +61,11 @@ def get_all_pic_metadata():
 
 @app.route('/api/pics/<filename>', methods=['GET'])
 def get_picture(filename: str):
-    #pics_dir = image_bucket.get_dir() 
-    #return send_from_directory(pics_dir, filename)
+    #added this block for performance
+    # remove this if image_bucket class get pictures from S3 or something
+    if not request.args:
+        pics_dir = image_bucket.get_dir() 
+        return send_from_directory(pics_dir, filename)
 
     img_io = BytesIO()
     img_format = filename.rsplit('.', 1)[1].upper()
