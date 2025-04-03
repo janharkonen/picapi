@@ -12,6 +12,48 @@ PicAPI provides a straightforward way to upload images and apply transformations
 - Get URL for your pictures
 - Sprinkle in custom commands in picture URL to get an edited picture
 
+## How to use the API ?!?!?!@??!?!?!?!?!?
+
+The following URL are live and fully functional, so feel free to try them yourself!
+
+Say you have a picture saved in your server from your domain
+```
+https://picapi.janharkonen.fi/api/pics/012f04b4f4bf4219a5ab1ae67b97eb7e.jpg
+```
+This will return you the picture that you saved as is.
+
+But it isn't quite right for whatever reason.
+I want to add 15% padding on all sides. Then I add the `BG=115` to the URL as a parameter.
+```
+https://picapi.janharkonen.fi/api/pics/012f04b4f4bf4219a5ab1ae67b97eb7e.jpg?BG=115
+```
+But I want to add more width than height. Say twice the width, but only 25% of the height. Then I can user the width and height background parameters `BGw=200` and `BGh=125`.
+```
+https://picapi.janharkonen.fi/api/pics/012f04b4f4bf4219a5ab1ae67b97eb7e.jpg?BGw=200&BGh=125
+```
+Say the default background color is awful. You can change the background color e.g. as white with the `BGc=white` parameter. The API currently supports white and black background colors, otherwise it defaults to grey.
+```
+https://picapi.janharkonen.fi/api/pics/012f04b4f4bf4219a5ab1ae67b97eb7e.jpg?BGc=white&BGw=200&BGh=125
+```
+IMPORTANT! The background color should be applied first in the url. Just because.
+
+You can also crop the images. This was implemented by pure accident, by it could be useful. Just user the `BG`, `BGw` and `BGh` parameters with values with less than 100%.
+```
+https://picapi.janharkonen.fi/api/pics/012f04b4f4bf4219a5ab1ae67b97eb7e.jpg?BGw=90&BGh=20
+```
+## Improvements in the future
+Here are some suggestions to improve the code. Feel free to submit a PR!
+- Ability to extend right and left, not only width
+- Abilityto extend up and down, not only height
+- Ability to arbitrarily choose background color
+- Make ImageTransformer class more of a functional programming style (maybe extend PIL.Image class or include PIL.Image instace as an attribute?)
+- Make ImageBucket to fetch images from S3 instead of the Hetzner Cloud VPS's local storage.
+- Make a delete photo option and sync pictures with SQLite metadata
+- Regular database audit (Check that the rows in the SQLite metadata correspond to pictures actually saved in the server)
+- Better UI
+- Automatic backups somehow
+- Dev and prod environment improvement (now you have to manually comment out the API URLs based on if you're in prod or dev)
+- Add authentication somehow
 ## Tech Stack
 
 - **Frontend**: Raw HTML and Vanilla JS
@@ -66,6 +108,7 @@ server {
 ```
 
 ### SQLite
+This is a cheat sheet for myself.
  - To run SQLite database, use
 ```bash
 sqlite3 PicMetadata.db
