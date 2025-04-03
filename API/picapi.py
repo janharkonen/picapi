@@ -30,7 +30,7 @@ def public_key_is_ok(publicKey: str):
         e = int(publicKey.split('e')[1])
         #the message has been encrypted with encrypt('thismessageisok', d, n)
         #but d and n are numbers I'm not gonna tell you
-        encrypted_message = 'ÜǼ\x16ûƏ\x10ûûŗń\x10§û,Ŏ'
+        encrypted_message = [6715068, 11436786, 10606194, 4546864, 9101572, 16746195, 4546864, 4546864, 16126318, 3217397, 16746195, 22491621, 4546864, 10786011, 27390050]
         decrypted_message = decrypt(encrypted_message, e, n)
         if decrypted_message == 'ThisMessageIsOK':
             return True

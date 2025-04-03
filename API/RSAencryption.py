@@ -17,16 +17,14 @@ def encrypt(message: str, d: int, n: int):
         #tässä encryptataan
         encrypted_unicode = get_power_modulo(unicode, d, n)
         
-        encrypted_char = chr(encrypted_unicode)
-        encrypted_message.append(encrypted_char)
-    return ''.join(encrypted_message)
+        encrypted_message.append(encrypted_unicode)
+    return encrypted_message
 
 def decrypt(encrypted_message: str, e: int, n: int):
     #e is public
     #n is public
     decrypted_message = []
-    for char in encrypted_message:
-        unicode = ord(char)
+    for unicode in encrypted_message:
 
         #tässä decryptataan
         decrypted_unicode = get_power_modulo(unicode,e,n)
