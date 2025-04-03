@@ -66,8 +66,9 @@ def get_picture(filename: str):
         if extend_background_percentage is not None:
             #edit this
             edited_image = image_transformer.extend_background(pics_dir, filename, extend_background_percentage)
-            return send_from_directory(pics_dir, filename)
-    return send_from_directory(pics_dir, filename)
+            return edited_image
+    image = send_from_directory(pics_dir, filename)
+    return image
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
