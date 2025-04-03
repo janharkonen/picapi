@@ -8,13 +8,15 @@ class ImageTransformer:
         pics_path = os.path.join(base_dir, '..', 'Pics')
         self.pics_path = os.path.join(pics_path)
     
-    def extend_background(self, img: Image, width: int, height: int) -> Image:
+    def extend_background(self, img: Image, 
+                          width: int = 100, 
+                          height: int = 100,
+                          background_color: tuple = (200, 200, 200)) -> Image:
         orig_width, orig_height = img.size
         new_width = int(orig_width * (width / 100))
         new_height = int(orig_height * (height / 100))
         
         #grey
-        background_color = (200, 200, 200)
         new_img = Image.new('RGB', (new_width, new_height), background_color)
         
         paste_x = (new_width - orig_width) // 2

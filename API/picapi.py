@@ -69,21 +69,43 @@ def get_picture(filename: str):
     if img_format == 'JPG':
         img_format = 'JPEG'  # PIL uses 'JPEG' instead of 'JPG
     image = image_bucket.get_image(filename)
-    
+
+
     if request.args:
+        bg_color = (200,200,200)
         for key, value in request.args.items():
+            if key == 'BGc':
+                if value == 'white':
+                    bg_color = (256,256,256)
+                elif value == 'grey':
+                    bg_color = (200,200,200)
+                elif value == 'black':
+                    bg_color = (0,0,0)
             if key == 'BG':
                 value = int(value)
                 assert type(value) is int, 'URL param "BG" is not int'
-                image = image_transformer.extend_background(image, value, value) 
+                image = image_transformer.extend_background(
+                    img = image, 
+                    width = value, 
+                    height = value,
+                    background_color = bg_color,
+                    ) 
             if key == 'BGw':
                 value = int(value)
                 assert type(value) is int, 'URL param "BGw" is not int'
-                image = image_transformer.extend_background(image, value, 100) 
+                image = image_transformer.extend_background(
+                    img = image, 
+                    width = value, 
+                    background_color = bg_color,
+                    ) 
             if key == 'BGh':
                 value = int(value)
                 assert type(value) is int, 'URL param "BGh" is not int'
-                image = image_transformer.extend_background(image, 100, value) 
+                image = image_transformer.extend_background(
+                    img = image, 
+                    height = value,
+                    background_color = bg_color,
+                    ) 
     
     assert type(image is Image), 'Image is not type PIL/Image' 
     image.save(img_io, format=img_format)
