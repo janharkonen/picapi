@@ -61,25 +61,34 @@ def get_all_pic_metadata():
 
 @app.route('/api/pics/<filename>', methods=['GET'])
 def get_picture(filename: str):
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    pics_dir = os.path.join(base_dir, '..', 'Pics')
-    if request.args:
-        extend_background_percentage = request.args.get('XBG')
-        if extend_background_percentage is not None:
-            #edit this
-            new_img = image_transformer.extend_background(pics_dir, filename, extend_background_percentage)
-            img_io = BytesIO()
-            img_format = filename.rsplit('.', 1)[1].upper()
-            if img_format == 'JPG':
-                img_format = 'JPEG'  # PIL uses 'JPEG' instead of 'JPG'
+    #pics_dir = image_bucket.get_dir() 
+    #return send_from_directory(pics_dir, filename)
 
-            assert type(new_img is Image), 'Image is not type PIL/Image' 
-            new_img.save(img_io, format=img_format)
-            img_io.seek(0)
-            return send_file(img_io, mimetype=f'image/{img_format.lower()}')
+    img_io = BytesIO()
+    img_format = filename.rsplit('.', 1)[1].upper()
+    if img_format == 'JPG':
+        img_format = 'JPEG'  # PIL uses 'JPEG' instead of 'JPG
+    image = image_bucket.get_image(filename)
     
-    image = send_from_directory(pics_dir, filename)
-    return image
+    if request.args:
+        for key, value in request.args.items():
+            if key == 'BG':
+                value = int(value)
+                assert type(value) is int, 'URL param "BG" is not int'
+                image = image_transformer.extend_background(image, value, value) 
+            if key == 'BGw':
+                value = int(value)
+                assert type(value) is int, 'URL param "BGw" is not int'
+                image = image_transformer.extend_background(image, value, 100) 
+            if key == 'BGh':
+                value = int(value)
+                assert type(value) is int, 'URL param "BGh" is not int'
+                image = image_transformer.extend_background(image, 100, value) 
+    
+    assert type(image is Image), 'Image is not type PIL/Image' 
+    image.save(img_io, format=img_format)
+    img_io.seek(0)
+    return send_file(img_io, mimetype=f'image/{img_format.lower()}')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

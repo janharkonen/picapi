@@ -1,14 +1,22 @@
 import os
 from werkzeug.datastructures.file_storage import FileStorage
+from PIL import Image
 
 class ImageBucket:
     def __init__(self):
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        pics_path = os.path.join(base_dir, '..', 'Pics')
-        self.pics_path = os.path.join(pics_path)
-        os.makedirs(self.pics_path, exist_ok=True)
+        self.pics_dir = os.path.join(base_dir, '..', 'Pics')
+        os.makedirs(self.pics_dir, exist_ok=True)
     
     def save(self, unique_filename: str, file: FileStorage):
         # Save the file
-        file_path = os.path.join(self.pics_path, unique_filename)
+        file_path = os.path.join(self.pics_dir, unique_filename)
         file.save(file_path)
+
+    def get_dir(self) -> str:
+        return self.pics_dir
+    
+    def get_image(self, filename: str) -> Image:
+        img_path = os.path.join(self.pics_dir, filename)
+        with Image.open(img_path) as img:
+            return img.copy()
