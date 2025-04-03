@@ -19,6 +19,10 @@
         h2 {
             text-align: center;
         }
+        img {
+            height:50px;
+            width:50px;
+        }
         #drop-area {
             border: 2px dashed #ccc;
             border-radius: 8px;
@@ -134,9 +138,11 @@
         // DEVELOMENT
         // const API_URL_UPLOAD = 'http://localhost:5000/api/upload';
         // const API_URL_GET = 'http://localhost:5000/api/getallpicmetadata';
+        // const API_URL_PIC = 'http://localhost:5000/api/pics/';
         // PRODUCTION
         const API_URL_UPLOAD = 'https://picapi.janharkonen.fi/api/upload';
         const API_URL_GET = 'https://picapi.janharkonen.fi/api/getallpicmetadata';
+        const API_URL_PIC = 'https://picapi.janharkonen.fi/api/pics/';
         
         // Handle drag and drop events
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -278,13 +284,22 @@
                 return response.json().then(data => {
                     
                     data.forEach((row, i) =>{
-                        const piclistItem = document.createElement('li')
-                        const piclistItemButton = document.createElement('button')
-                        piclistItemButton.textContent = String(i+1) + '. ' + row['original_filename']
-                        piclistItemButton.id = row['uuid']
-                        piclistItemButton.className = 'picMetadata'
-                        piclistItemButton.onclick = () => copyImageLinkToClipboard(row['uuid']);                       piclistItem.appendChild(piclistItemButton)
-                        piclist.appendChild(piclistItem)
+                        const piclistItem = document.createElement('li');
+                        
+                        const piclistItemButton = document.createElement('button');
+                        const textContent = document.createTextNode(String(i+1) + '. ' + row['original_filename']);
+                        piclistItemButton.id = row['uuid'];
+                        piclistItemButton.className = 'picMetadata';
+                        piclistItemButton.onclick = () => copyImageLinkToClipboard(row['uuid']);
+
+                        const piclistItemImg = document.createElement('img');
+                        piclistItemImg.src = `${API_URL_PIC}${row['uuid']}`;
+                        
+                        piclistItemButton.appendChild(piclistItemImg)
+                        piclistItemButton.appendChild(textContent)
+                        
+                        piclistItem.appendChild(piclistItemButton);
+                        piclist.appendChild(piclistItem);
                     })
                 });
             })
@@ -296,7 +311,7 @@
         }
 
         function copyImageLinkToClipboard(uuid) {
-            const imageUrl = `https://picapi.janharkonen.fi/api/pics/${uuid}`;
+            const imageUrl = `${API_URL_PIC}${uuid}`;
             navigator.clipboard.writeText(imageUrl)
                 .then(() => {
                     showStatus(`URL copied to clipboard: ${imageUrl}`, 'success');
