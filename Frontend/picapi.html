@@ -118,6 +118,12 @@
         const API_URL_GET = 'https://picapi.janharkonen.fi/api/getallpicmetadata';
         const API_URL_PIC = 'https://picapi.janharkonen.fi/api/pics/';
         
+        function getPublicKey() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('publicKey');
+        }
+        const publicKey = getPublicKey();
+        
         // Handle drag and drop events
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             dropArea.addEventListener(eventName, preventDefaults, false);
@@ -174,16 +180,22 @@
         
         // Upload the file to the server
         function uploadFile(file) {
-            if (!file.type.match('image.*')) {
-                showStatus('Only image files are allowed', 'error');
-                return;
-            }
-            
-            const formData = new FormData();
-            formData.append('image', file);
-            
-            fetch(API_URL_UPLOAD, {
-                method: 'POST',
+            if (publicKey) {
+                if (!file.type.match('image.*')) {
+                    showStatus('Only image files are allowed', 'error');
+                    return;
+                }
+                
+
+                const formData = new FormData();
+                formData.append('image', file);
+                
+                if (publicKey) {
+                    formData.append('publicKey', publicKey);
+                }
+                
+                fetch(API_URL_UPLOAD, {
+                    method: 'POST',
                 body: formData
             })
             .then(response => {
@@ -202,11 +214,14 @@
                 displayUploadedPics()
             })
             .catch(error => {
-                showStatus(`Upload failed: ${error.message}`, 'error');
-                console.error('Error:', error);
-            });
-        }
+                    showStatus(`Upload failed: ${error.message}`, 'error');
+                    console.error('Error:', error);
+                });
+            } else {
+                showStatus(`Upload failed: No public Key`, 'error');
+            }
         
+        }
         // Display status messages
         function showStatus(message, type) {
             status.textContent = message;

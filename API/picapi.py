@@ -1,13 +1,13 @@
 from flask import Flask, request, jsonify, send_from_directory, send_file
 from flask_cors import CORS
 import uuid
-import os
 from io import BytesIO
 from PIL import Image
 from werkzeug.utils import secure_filename
 from SQLiteInterface import SQLiteInterface
 from ImageBucket import ImageBucket
 from ImageTransformer import ImageTransformer
+from RSAencryption import decrypt
 
 
 app = Flask(__name__)
@@ -24,35 +24,53 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def public_key_is_ok(publicKey: str):
+    try:
+        n = int(publicKey.split('n')[1].split('e')[0])
+        e = int(publicKey.split('e')[1])
+        #the message has been encrypted with encrypt('thismessageisok', d, n)
+        #but d and n are numbers I'm not gonna tell you
+        encrypted_message = 'ÜǼ\x16ûƏ\x10ûûŗń\x10§û,Ŏ'
+        decrypted_message = decrypt(encrypted_message, e, n)
+        if decrypted_message == 'ThisMessageIsOK':
+            return True
+        return False
+    except:
+        return False
+
 @app.route('/api/upload', methods=['POST'])
 def upload_image():
-    if 'image' not in request.files:
-        return jsonify({'error': 'Flask: No image part in the request'}), 400
-    
-    file = request.files['image']
-    if file.filename == '':
-        return jsonify({'error': 'Flask: No image selected for uploading'}), 400
-    
-    if file and allowed_file(file.filename):
-        try:    
-            # Generate a unique filename to prevent overwriting
-            unique_id = uuid.uuid4().hex
-            original_filename = secure_filename(file.filename)
-            file_extension = original_filename.rsplit('.', 1)[1].lower()
-            unique_filename = f"{unique_id}.{file_extension}"
-            
-            image_bucket.save(unique_filename, file)
-            db_interface.save(unique_filename, file.filename)
-            ## Return success response
-            return jsonify({
-                'message': 'Image uploaded successfully',
-                #'filename': unique_filename,
-                #'original_filename': original_filename
-            }), 200
-        except:
-            return jsonify({'error': 'Flask: unknown error occured'}), 400
+    publicKey = request.form.get('publicKey')
+    if public_key_is_ok(publicKey):
+        if 'image' not in request.files:
+            return jsonify({'error': 'Flask: No image part in the request'}), 400
+
+        file = request.files['image']
+        if file.filename == '':
+            return jsonify({'error': 'Flask: No image selected for uploading'}), 400
+
+        if file and allowed_file(file.filename):
+            try:    
+                # Generate a unique filename to prevent overwriting
+                unique_id = uuid.uuid4().hex
+                original_filename = secure_filename(file.filename)
+                file_extension = original_filename.rsplit('.', 1)[1].lower()
+                unique_filename = f"{unique_id}.{file_extension}"
+
+                image_bucket.save(unique_filename, file)
+                db_interface.save(unique_filename, file.filename)
+                ## Return success response
+                return jsonify({
+                    'message': 'Image uploaded successfully',
+                    #'filename': unique_filename,
+                    #'original_filename': original_filename
+                }), 200
+            except:
+                return jsonify({'error': 'Flask: unknown error occured'}), 400
+        else:
+            return jsonify({'error': 'Flask: File type not allowed'}), 400
     else:
-        return jsonify({'error': 'Flask: File type not allowed'}), 400
+        return jsonify({'error': 'Flask: Public key was invalid'}), 400
 
 @app.route('/api/getallpicmetadata', methods=['GET'])
 def get_all_pic_metadata():
