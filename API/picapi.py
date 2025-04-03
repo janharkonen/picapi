@@ -1,7 +1,9 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, send_file
 from flask_cors import CORS
 import uuid
 import os
+from io import BytesIO
+from PIL import Image
 from werkzeug.utils import secure_filename
 from SQLiteInterface import SQLiteInterface
 from ImageBucket import ImageBucket
@@ -65,8 +67,17 @@ def get_picture(filename: str):
         extend_background_percentage = request.args.get('XBG')
         if extend_background_percentage is not None:
             #edit this
-            edited_image = image_transformer.extend_background(pics_dir, filename, extend_background_percentage)
-            return edited_image
+            new_img = image_transformer.extend_background(pics_dir, filename, extend_background_percentage)
+            img_io = BytesIO()
+            img_format = filename.rsplit('.', 1)[1].upper()
+            if img_format == 'JPG':
+                img_format = 'JPEG'  # PIL uses 'JPEG' instead of 'JPG'
+
+            assert type(new_img is Image), 'Image is not type PIL/Image' 
+            new_img.save(img_io, format=img_format)
+            img_io.seek(0)
+            return send_file(img_io, mimetype=f'image/{img_format.lower()}')
+    
     image = send_from_directory(pics_dir, filename)
     return image
 
