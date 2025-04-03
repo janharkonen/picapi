@@ -5,6 +5,7 @@ import os
 from werkzeug.utils import secure_filename
 from SQLiteInterface import SQLiteInterface
 from ImageBucket import ImageBucket
+from ImageTransformer import ImageTransformer
 
 
 app = Flask(__name__)
@@ -12,6 +13,7 @@ app = Flask(__name__)
 CORS(app)
 db_interface = SQLiteInterface()
 image_bucket = ImageBucket()
+image_transformer = ImageTransformer()
 # Configuration
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
@@ -60,9 +62,10 @@ def get_picture(filename: str):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     pics_dir = os.path.join(base_dir, '..', 'Pics')
     if request.args:
-        extend_background = request.args.get('XBG')
-        if extend_background is not None:
+        extend_background_percentage = request.args.get('XBG')
+        if extend_background_percentage is not None:
             #edit this
+            edited_image = image_transformer.extend_background(pics_dir, filename, extend_background_percentage)
             return send_from_directory(pics_dir, filename)
     return send_from_directory(pics_dir, filename)
 
