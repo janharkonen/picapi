@@ -9,18 +9,20 @@ class ImageTransformer:
         self.pics_path = os.path.join(pics_path)
     
     def extend_background(self, img: Image, 
-                          width: int = 100, 
-                          height: int = 100,
+                          left: int = 100, 
+                          right: int = 100, 
+                          top: int = 100,
+                          bottom: int = 100,
                           background_color: tuple = (200, 200, 200)) -> Image:
         orig_width, orig_height = img.size
-        new_width = int(orig_width * (width / 100))
-        new_height = int(orig_height * (height / 100))
+        new_width = int(orig_width + orig_width*(left/100 - 1) + orig_width*(right/100-1))
+        new_height = int(orig_height + orig_height*(top/100 - 1) + orig_height*(bottom/100-1))
         
         #grey
-        new_img = Image.new('RGBA', (new_width, new_height), background_color)
+        new_img = Image.new(img.mode, (new_width, new_height), background_color)
         
-        paste_x = (new_width - orig_width) // 2
-        paste_y = (new_height - orig_height) // 2
+        paste_x = int(new_width - orig_width*(right/100))
+        paste_y = int(new_height - orig_height*(bottom/100))
         new_img.paste(img, (paste_x, paste_y))
         
         return new_img

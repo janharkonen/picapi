@@ -124,8 +124,10 @@ def get_picture(filename: str):
                 assert type(value) is int, 'URL param "BG" is not int'
                 image = image_transformer.extend_background(
                     img = image, 
-                    width = value, 
-                    height = value,
+                    left = value, 
+                    right = value, 
+                    top = value, 
+                    bottom = value, 
                     background_color = bg_color,
                     ) 
             if key == 'BGw':
@@ -133,7 +135,8 @@ def get_picture(filename: str):
                 assert type(value) is int, 'URL param "BGw" is not int'
                 image = image_transformer.extend_background(
                     img = image, 
-                    width = value, 
+                    left = ((value - 100) // 2) + 100, 
+                    right = ((value - 100) // 2) + 100, 
                     background_color = bg_color,
                     ) 
             if key == 'BGh':
@@ -141,7 +144,40 @@ def get_picture(filename: str):
                 assert type(value) is int, 'URL param "BGh" is not int'
                 image = image_transformer.extend_background(
                     img = image, 
-                    height = value,
+                    top = ((value - 100) // 2) + 100, 
+                    bottom = ((value - 100) // 2) + 100, 
+                    background_color = bg_color,
+                    ) 
+            if key == 'BGl':
+                value = int(value)
+                assert type(value) is int, 'URL param "BGl" is not int'
+                image = image_transformer.extend_background(
+                    img = image, 
+                    left = value, 
+                    background_color = bg_color,
+                    ) 
+            if key == 'BGr':
+                value = int(value)
+                assert type(value) is int, 'URL param "BGr" is not int'
+                image = image_transformer.extend_background(
+                    img = image, 
+                    right = value, 
+                    background_color = bg_color,
+                    ) 
+            if key == 'BGt':
+                value = int(value)
+                assert type(value) is int, 'URL param "BGt" is not int'
+                image = image_transformer.extend_background(
+                    img = image,
+                    top = value, 
+                    background_color = bg_color,
+                    ) 
+            if key == 'BGb':
+                value = int(value)
+                assert type(value) is int, 'URL param "BGb" is not int'
+                image = image_transformer.extend_background(
+                    img = image, 
+                    bottom = value, 
                     background_color = bg_color,
                     ) 
     
