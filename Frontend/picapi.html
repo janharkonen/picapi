@@ -357,7 +357,7 @@
                         // Handle error responses (4xx, 5xx)
                         throw new Error(data.error || 'Upload failed');
                     }
-                    showStatus(`Image uploaded successfully: ${data.message || 'Success'}`, 'success');
+                    showStatus(`Image deleted successfully: ${data.message || 'Success'}`, 'success');
                     displayUploadedPics()
                 })
                 .catch(error => {
