@@ -17,7 +17,7 @@ class ImageTransformer:
         new_height = int(orig_height * (height / 100))
         
         #grey
-        new_img = Image.new('RGB', (new_width, new_height), background_color)
+        new_img = Image.new('RGBA', (new_width, new_height), background_color)
         
         paste_x = (new_width - orig_width) // 2
         paste_y = (new_height - orig_height) // 2

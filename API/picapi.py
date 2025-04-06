@@ -81,6 +81,7 @@ def get_all_pic_metadata():
 def get_picture(filename: str):
     #added this block for performance
     # remove this if image_bucket class get pictures from S3 or something
+    
     if not request.args:
         pics_dir = image_bucket.get_dir() 
         return send_from_directory(pics_dir, filename)
@@ -93,7 +94,7 @@ def get_picture(filename: str):
 
 
     if request.args:
-        bg_color = (200,200,200)
+        bg_color = (0, 0, 0, 0)  # Transparent background
         for key, value in request.args.items():
             if key == 'BGc':
                 if value == 'white':
