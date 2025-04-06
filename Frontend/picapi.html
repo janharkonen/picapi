@@ -78,14 +78,44 @@
             margin-top: 10px;
             width: 100%;
             text-align: start;
+            position: relative; /* Add this to position the X button relative to this container */
+            display: flex; /* Use flexbox for alignment */
+            align-items: center; /* Center items vertically */
         }
-        
+
         .picMetadata:hover {
             background-color: #d1e6b7;
         }
-        .xbutton {
-            align-self: flex-end;
+
+        .delete-button {
+            position: absolute;
+            right: 15px; /* Position from the right with some margin */
+            background-color: #ff3b30; /* Red color */
+            color: white;
+            border: none;
+            border-radius: 50%; /* Make it circular */
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 10px;
         }
+
+        .delete-button:hover {
+            background-color: #d9302c; /* Darker red on hover */
+        }
+
+        /* Add this to ensure the image and text stay aligned properly */
+        .pic-content {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+
 
     </style>
 </head>
@@ -240,48 +270,59 @@
         }
         // Display uploaded pics
         function displayUploadedPics() {
-            
             piclist.innerHTML = '';
             fetch(API_URL_GET, {
                 method: 'GET',
                 payload: 'hash123123123'
             })
             .then(response => {
-                // Parse the JSON response regardless of status code
                 return response.json().then(data => {
-                    
-                    data.forEach((row, i) =>{
+                    data.forEach((row, i) => {
                         const piclistItem = document.createElement('li');
-                        
+
                         const piclistItemButton = document.createElement('button');
                         const textContent = document.createTextNode(String(i+1) + '. ' + row['original_filename']);
                         piclistItemButton.id = row['uuid'];
                         piclistItemButton.className = 'picMetadata';
-                        piclistItemButton.onclick = () => copyImageLinkToClipboard(row['uuid']);
+                        piclistItemButton.onclick = (e) => {
+                            // Only copy to clipboard if not clicking the delete button
+                            if (!e.target.classList.contains('delete-button')) {
+                                copyImageLinkToClipboard(row['uuid']);
+                            }
+                        };
+                    
+                        // Create a container for pic content
+                        const picContentDiv = document.createElement('div');
+                        picContentDiv.className = 'pic-content';
 
                         const piclistItemImg = document.createElement('img');
                         piclistItemImg.src = `${API_URL_PIC}${row['uuid']}`;
 
-                        const piclistItemXButtom = document.createElement('button');
-                        piclistItemXButtom.innerHTML = 'X';
-                        piclistItemXButtom.className = 'xbutton';
-                        piclistItemXButtom.onclick = () => deleteImage(row['uuid']);
-                        
-                        piclistItemButton.appendChild(piclistItemImg)
-                        piclistItemButton.appendChild(textContent)
-                        piclistItemButton.appendChild(piclistItemXButtom)
-                        
+                        // Add the delete button
+                        const deleteButton = document.createElement('button');
+                        deleteButton.innerHTML = 'X';
+                        deleteButton.className = 'delete-button';
+                        deleteButton.onclick = (e) => {
+                            e.stopPropagation(); // Prevent the parent button click
+                            deleteImage(row['uuid']);
+                        };
+
+                        picContentDiv.appendChild(piclistItemImg);
+                        picContentDiv.appendChild(textContent);
+
+                        piclistItemButton.appendChild(picContentDiv);
+                        piclistItemButton.appendChild(deleteButton);
+
                         piclistItem.appendChild(piclistItemButton);
                         piclist.appendChild(piclistItem);
-                    })
+                    });
                 });
             })
-            .catch(error => {
-                showStatus(`Item fetching failed: ${error.message}`, 'error');
-                console.error('Error:', error);
-            });
-
-        }
+    .catch(error => {
+        showStatus(`Item fetching failed: ${error.message}`, 'error');
+        console.error('Error:', error);
+    });
+}
 
         function copyImageLinkToClipboard(uuid) {
             const imageUrl = `${API_URL_PIC}${uuid}`;
@@ -305,14 +346,19 @@
                     body: JSON.stringify({ publicKey })
                 })
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
+                    // Parse the JSON response regardless of status code
+                    return response.json().then(data => {
+                        // Add status to the data object
+                        return { ...data, status: response.status, ok: response.ok };
+                    });
                 })
                 .then(data => {
-                    showStatus(`Image deleted successfully: ${data.message || 'Success'}`, 'success');
-                    displayUploadedPics();
+                    if (!data.ok) {
+                        // Handle error responses (4xx, 5xx)
+                        throw new Error(data.error || 'Upload failed');
+                    }
+                    showStatus(`Image uploaded successfully: ${data.message || 'Success'}`, 'success');
+                    displayUploadedPics()
                 })
                 .catch(error => {
                     showStatus(`Delete failed: ${error.message}`, 'error');

@@ -72,6 +72,22 @@ def upload_image():
     else:
         return jsonify({'error': 'Flask: Public key was invalid'}), 400
 
+@app.route('/api/delete/<uuid>', methods=['DELETE'])
+def delete_image(uuid: str):
+    publicKey = request.json.get('publicKey')
+    if public_key_is_ok(publicKey):
+        try:    
+            image_bucket.delete(uuid)
+            db_interface.delete(uuid)
+            ## Return success response
+            return jsonify({
+                'message': 'Image deleted successfully',
+            }), 200
+        except:
+            return jsonify({'error': 'Flask: unknown error occured'}), 400
+    else:
+        return jsonify({'error': 'Flask: Public key was invalid'}), 400
+
 @app.route('/api/getallpicmetadata', methods=['GET'])
 def get_all_pic_metadata():
     pic_metadata = db_interface.get_metadata()

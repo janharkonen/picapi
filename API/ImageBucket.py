@@ -13,6 +13,12 @@ class ImageBucket:
         file_path = os.path.join(self.pics_dir, unique_filename)
         file.save(file_path)
 
+    def delete(self, filename: str):
+        # Delete the file
+        file_path = os.path.join(self.pics_dir, filename)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
     def get_dir(self) -> str:
         return self.pics_dir
     

@@ -36,6 +36,19 @@ class SQLiteInterface:
         self.conn.commit()
         self.conn.close()
     
+    def delete(self, uuid: str):
+        self.conn = sqlite3.connect(self.db_path)
+        self.cursor = self.conn.cursor()
+        self.cursor.execute(
+            '''
+            DELETE FROM PIC_METADATA
+            WHERE uuid = ?
+            ''',
+            (uuid,)
+        )
+        self.conn.commit()
+        self.conn.close()
+
     def get_metadata(self) -> list[dict]:
         self.conn = sqlite3.connect(self.db_path)
         self.cursor = self.conn.cursor()
