@@ -83,6 +83,9 @@
         .picMetadata:hover {
             background-color: #d1e6b7;
         }
+        .xbutton {
+            align-self: flex-end;
+        }
 
     </style>
 </head>
@@ -111,10 +114,12 @@
         // API endpoint
         // DEVELOMENT
         // const API_URL_UPLOAD = 'http://localhost:5000/api/upload';
+        // const API_URL_DELETE = 'http://localhost:5000/api/delete';
         // const API_URL_GET = 'http://localhost:5000/api/getallpicmetadata';
         // const API_URL_PIC = 'http://localhost:5000/api/pics/';
         // PRODUCTION
         const API_URL_UPLOAD = 'https://picapi.janharkonen.fi/api/upload';
+        const API_URL_DELETE = 'https://picapi.janharkonen.fi/api/delete';
         const API_URL_GET = 'https://picapi.janharkonen.fi/api/getallpicmetadata';
         const API_URL_PIC = 'https://picapi.janharkonen.fi/api/pics/';
         
@@ -256,9 +261,15 @@
 
                         const piclistItemImg = document.createElement('img');
                         piclistItemImg.src = `${API_URL_PIC}${row['uuid']}`;
+
+                        const piclistItemXButtom = document.createElement('button');
+                        piclistItemXButtom.innerHTML = 'X';
+                        piclistItemXButtom.className = 'xbutton';
+                        piclistItemXButtom.onclick = () => deleteImage(row['uuid']);
                         
                         piclistItemButton.appendChild(piclistItemImg)
                         piclistItemButton.appendChild(textContent)
+                        piclistItemButton.appendChild(piclistItemXButtom)
                         
                         piclistItem.appendChild(piclistItemButton);
                         piclist.appendChild(piclistItem);
@@ -282,6 +293,34 @@
                     showStatus('Failed to copy URL to clipboard', 'error');
                     console.error('Error copying text: ', err);
                 });
+        }
+
+        function deleteImage(uuid) {
+            if (publicKey) {
+                fetch(`${API_URL_DELETE}/${uuid}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ publicKey })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    showStatus(`Image deleted successfully: ${data.message || 'Success'}`, 'success');
+                    displayUploadedPics();
+                })
+                .catch(error => {
+                    showStatus(`Delete failed: ${error.message}`, 'error');
+                    console.error('Error:', error);
+                });
+            } else {
+                showStatus(`Delete failed: No public Key`, 'error');
+            }
         }
     </script>
 </body>
