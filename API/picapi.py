@@ -17,7 +17,7 @@ db_interface = SQLiteInterface()
 image_bucket = ImageBucket()
 image_transformer = ImageTransformer()
 # Configuration
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'svg'}
 
 # Helper function to check allowed file extensions
 def allowed_file(filename):
