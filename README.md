@@ -41,19 +41,17 @@ You can also crop the images. This was implemented by pure accident, by it could
 ```
 https://picapi.janharkonen.fi/api/pics/012f04b4f4bf4219a5ab1ae67b97eb7e.jpg?BGw=90&BGh=20
 ```
+You can extend/crop images also in one of the cardinal directions: left, right, top, bottom with the commands `BGl`, `BGr`, `BGt` and `BGb`respectively.
 ## Improvements in the future
 Here are some suggestions to improve the code. Feel free to submit a PR!
-- Ability to extend right and left, not only width
-- Abilityto extend up and down, not only height
 - Ability to arbitrarily choose background color
 - Make ImageTransformer class more of a functional programming style (maybe extend PIL.Image class or include PIL.Image instace as an attribute?)
 - Make ImageBucket to fetch images from S3 instead of the Hetzner Cloud VPS's local storage.
-- Make a delete photo option and sync pictures with SQLite metadata
 - Regular database audit (Check that the rows in the SQLite metadata correspond to pictures actually saved in the server)
 - Better UI
 - Automatic backups somehow
 - Dev and prod environment improvement (now you have to manually comment out the API URLs based on if you're in prod or dev)
-- Add authentication somehow
+- SVG manipulating support
 ## Tech Stack
 
 - **Frontend**: Raw HTML and Vanilla JS
