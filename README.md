@@ -52,6 +52,8 @@ Here are some suggestions to improve the code. Feel free to submit a PR!
 - Automatic backups somehow
 - Dev and prod environment improvement (now you have to manually comment out the API URLs based on if you're in prod or dev)
 - SVG manipulating support
+- Make it possible to save large files (> 2 MB)
+- Make it possible to save any file
 ## Tech Stack
 
 - **Frontend**: Raw HTML and Vanilla JS
