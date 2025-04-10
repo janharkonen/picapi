@@ -18,8 +18,14 @@ class ImageTransformer:
         new_width = int(orig_width + orig_width*(left/100 - 1) + orig_width*(right/100-1))
         new_height = int(orig_height + orig_height*(top/100 - 1) + orig_height*(bottom/100-1))
         
-        #grey
-        new_img = Image.new(img.mode, (new_width, new_height), background_color)
+        if len(background_color) == 4 and background_color[3] == 0:
+            if img.mode != 'RGBA':
+                img = img.convert('RGBA')
+            mode = 'RGBA'
+        else:
+            mode = img.mode
+            
+        new_img = Image.new(mode, (new_width, new_height), background_color)
         
         paste_x = int(new_width - orig_width*(right/100))
         paste_y = int(new_height - orig_height*(bottom/100))
