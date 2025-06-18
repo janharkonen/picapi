@@ -181,7 +181,7 @@ def get_picture(filename: str):
                     background_color = bg_color,
                     ) 
     
-    assert type(image is Image), 'Image is not type PIL/Image' 
+    assert isinstance(image, Image.Image), 'Image is not type PIL.Image'
     image.save(img_io, format=img_format)
     img_io.seek(0)
     return send_file(img_io, mimetype=f'image/{img_format.lower()}')
