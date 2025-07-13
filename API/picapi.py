@@ -116,7 +116,7 @@ def get_picture(filename: str):
                 if value == 'white':
                     bg_color = (256,256,256)
                 elif value == 'grey':
-                    bg_color = (200,200,200)
+                    bg_color = (240,240,240)
                 elif value == 'black':
                     bg_color = (0,0,0)
             if key == 'BGremove':
