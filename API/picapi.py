@@ -119,6 +119,11 @@ def get_picture(filename: str):
                     bg_color = (200,200,200)
                 elif value == 'black':
                     bg_color = (0,0,0)
+            if key == 'BGremove':
+                if value == 'true':
+                    image = image_transformer.remove_background(
+                        img = image,
+                        )
             if key == 'BG':
                 value = int(value)
                 assert type(value) is int, 'URL param "BG" is not int'

@@ -1,6 +1,6 @@
 import os
 from PIL import Image
-
+from rembg import remove
 
 class ImageTransformer:
     def __init__(self):
@@ -31,4 +31,8 @@ class ImageTransformer:
         paste_y = int(new_height - orig_height*(bottom/100))
         new_img.paste(img, (paste_x, paste_y))
         
+        return new_img
+    
+    def remove_background(self, img: Image) -> Image:
+        new_img = remove(img)
         return new_img
