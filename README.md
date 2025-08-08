@@ -18,30 +18,35 @@ The following URL are live and fully functional, so feel free to try them yourse
 
 Say you have a picture saved in your server from your domain
 ```
-https://picapi.janharkonen.fi/api/pics/012f04b4f4bf4219a5ab1ae67b97eb7e.jpg
+https://picapi.janharkonen.fi/api/pics/994c4623d3a045049dd21d0a05f55bd4.png
 ```
 This will return you the picture that you saved as is.
 
 But it isn't quite right for whatever reason.
 I want to add 15% padding on all sides. Then I add the `BG=115` to the URL as a parameter.
 ```
-https://picapi.janharkonen.fi/api/pics/012f04b4f4bf4219a5ab1ae67b97eb7e.jpg?BG=115
+https://picapi.janharkonen.fi/api/pics/994c4623d3a045049dd21d0a05f55bd4.png?BG=115
 ```
 But I want to add more width than height. Say twice the width, but only 25% of the height. Then I can user the width and height background parameters `BGw=200` and `BGh=125`.
 ```
-https://picapi.janharkonen.fi/api/pics/012f04b4f4bf4219a5ab1ae67b97eb7e.jpg?BGw=200&BGh=125
+https://picapi.janharkonen.fi/api/pics/994c4623d3a045049dd21d0a05f55bd4.png?BGw=200&BGh=125
 ```
 Say the default background color is awful. You can change the background color e.g. as white with the `BGc=white` parameter. The API currently supports white and black background colors, otherwise it defaults to grey.
 ```
-https://picapi.janharkonen.fi/api/pics/012f04b4f4bf4219a5ab1ae67b97eb7e.jpg?BGc=white&BGw=200&BGh=125
+https://picapi.janharkonen.fi/api/pics/994c4623d3a045049dd21d0a05f55bd4.png?BGc=white&BGw=200&BGh=125
 ```
-IMPORTANT! The background color should be applied first in the url. Just because.
+**IMPORTANT!** The background color should be applied first in the URL. Just because.
 
 You can also crop the images. This was implemented by pure accident, by it could be useful. Just user the `BG`, `BGw` and `BGh` parameters with values with less than 100%.
 ```
-https://picapi.janharkonen.fi/api/pics/012f04b4f4bf4219a5ab1ae67b97eb7e.jpg?BGw=90&BGh=20
+https://picapi.janharkonen.fi/api/pics/994c4623d3a045049dd21d0a05f55bd4.png?BGw=90&BGh=20
 ```
 You can extend/crop images also in one of the cardinal directions: left, right, top, bottom with the commands `BGl`, `BGr`, `BGt` and `BGb`respectively.
+
+You can also remove the background by adding `BGremove=true`. But it doesn't work on .jpg files. It works with .png though. Just because.
+```
+https://picapi.janharkonen.fi/api/pics/994c4623d3a045049dd21d0a05f55bd4.png?BGremove=true
+```
 ## Improvements in the future
 Here are some suggestions to improve the code. Feel free to submit a PR!
 - Ability to arbitrarily choose background color
@@ -56,7 +61,7 @@ Here are some suggestions to improve the code. Feel free to submit a PR!
 - Make it possible to save any file
 ## Tech Stack
 
-- **Frontend**: Raw HTML and Vanilla JS
+- **Frontend**: Raw HTML, CSS and Vanilla JS
 - **API**: Flask
 - **Database**: SQLite
 - **Deployment**: Whatever you like! (I use Hetzner VPS)
