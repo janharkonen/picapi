@@ -38,6 +38,10 @@ def public_key_is_ok(publicKey: str):
     except:
         return False
 
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({'status': 'ok'}), 200
+
 @app.route('/api/upload', methods=['POST'])
 def upload_image():
     publicKey = request.form.get('publicKey')
