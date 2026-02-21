@@ -5,7 +5,7 @@ from rembg import remove
 class ImageTransformer:
     def __init__(self):
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        pics_path = os.path.join(base_dir, '..', 'Pics')
+        pics_path = os.path.join('app', 'app', 'storage', 'storage', 'Pics')
         self.pics_path = os.path.join(pics_path)
     
     def extend_background(self, img: Image, 

@@ -5,7 +5,7 @@ import sqlite3
 class SQLiteInterface:
     def __init__(self):
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        db_dir = os.path.join(base_dir, '..', 'Database')
+        db_dir = os.path.join('app', 'app', 'storage', 'storage')
         os.makedirs(db_dir, exist_ok=True)
         self.db_path = os.path.join(db_dir, 'PicMetadata.db')
         
