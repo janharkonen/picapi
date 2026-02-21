@@ -199,18 +199,11 @@ def get_picture(filename: str):
     img_io.seek(0)
     return send_file(img_io, mimetype=f'image/{img_format.lower()}')
 
-asgi_app = None
-try:
-    from asgiref.wsgi import WsgiToAsgi
-    asgi_app = WsgiToAsgi(app)
-except ImportError:
-    pass
+from asgiref.wsgi import WsgiToAsgi
+asgi_app = WsgiToAsgi(app)
 
 if __name__ == '__main__':
     import os
+    import uvicorn
     port = int(os.environ.get('PORT', 5000))
-    if asgi_app:
-        import uvicorn
-        uvicorn.run(asgi_app, host='0.0.0.0', port=port)
-    else:
-        app.run(debug=True, host='0.0.0.0', port=port)
+    uvicorn.run(asgi_app, host='0.0.0.0', port=port)
