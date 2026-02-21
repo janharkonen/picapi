@@ -5,7 +5,7 @@ from PIL import Image
 class ImageBucket:
     def __init__(self):
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        self.pics_dir = os.path.join('app', 'app', 'storage', 'storage', 'Pics')
+        self.pics_dir = os.path.join('/app', 'app', 'storage', 'storage', 'Pics')
         os.makedirs(self.pics_dir, exist_ok=True)
     
     def save(self, unique_filename: str, file: FileStorage):
