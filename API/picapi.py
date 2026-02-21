@@ -40,6 +40,10 @@ def public_key_is_ok(publicKey: str):
 
 @app.route('/health', methods=['GET'])
 def health():
+    return jsonify({'status': 'healthy'}), 200
+
+@app.route('/', methods=['GET'])
+def root():
     return jsonify({'status': 'ok'}), 200
 
 @app.route('/api/upload', methods=['POST'])
@@ -195,7 +199,18 @@ def get_picture(filename: str):
     img_io.seek(0)
     return send_file(img_io, mimetype=f'image/{img_format.lower()}')
 
+asgi_app = None
+try:
+    from asgiref.wsgi import WsgiToAsgi
+    asgi_app = WsgiToAsgi(app)
+except ImportError:
+    pass
+
 if __name__ == '__main__':
     import os
     port = int(os.environ.get('PORT', 5000))
-    app.run(debug=True, host='0.0.0.0', port=port)
+    if asgi_app:
+        import uvicorn
+        uvicorn.run(asgi_app, host='0.0.0.0', port=port)
+    else:
+        app.run(debug=True, host='0.0.0.0', port=port)
