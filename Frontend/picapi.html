@@ -1,373 +1,381 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PICAPI</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        h1 {
-            text-align: center;
-        }
-        
-        h2 {
-            text-align: center;
-        }
-        img {
-            height:50px;
-            width:50px;
-        }
-        #drop-area {
-            border: 2px dashed #ccc;
-            border-radius: 8px;
-            padding: 40px;
-            text-align: center;
-            margin: 20px 0;
-            transition: border-color 0.3s ease;
-        }
-        
-        #drop-area.highlight {
-            border-color: #007bff;
-            background-color: rgba(0, 123, 255, 0.05);
-        }
-        
-        #file-input {
-            display: none;
-        }
-        
-        #upload-button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        
-        #upload-button:hover {
-            background-color: #0056b3;
-        }
-        #status {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 4px;
-        }
-        
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        .picMetadata {
-            color: rgb(63, 63, 63);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-            width: 100%;
-            text-align: start;
-            position: relative; /* Add this to position the X button relative to this container */
-            display: flex; /* Use flexbox for alignment */
-            align-items: center; /* Center items vertically */
-        }
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
 
-        .picMetadata:hover {
-            background-color: #d1e6b7;
-        }
+      h1 {
+        text-align: center;
+      }
 
-        .delete-button {
-            position: absolute;
-            right: 15px; /* Position from the right with some margin */
-            background-color: #ff3b30; /* Red color */
-            color: white;
-            border: none;
-            border-radius: 50%; /* Make it circular */
-            width: 24px;
-            height: 24px;
-            font-size: 14px;
-            line-height: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            margin-left: 10px;
-        }
+      h2 {
+        text-align: center;
+      }
+      h3 {
+        text-align: center;
+      }
+      img {
+        height: 50px;
+        width: 50px;
+      }
+      #drop-area {
+        border: 2px dashed #ccc;
+        border-radius: 8px;
+        padding: 40px;
+        text-align: center;
+        margin: 20px 0;
+        transition: border-color 0.3s ease;
+      }
 
-        .delete-button:hover {
-            background-color: #d9302c; /* Darker red on hover */
-        }
+      #drop-area.highlight {
+        border-color: #007bff;
+        background-color: rgba(0, 123, 255, 0.05);
+      }
 
-        /* Add this to ensure the image and text stay aligned properly */
-        .pic-content {
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
-        }
+      #file-input {
+        display: none;
+      }
 
+      #upload-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
 
+      #upload-button:hover {
+        background-color: #0056b3;
+      }
+      #status {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 4px;
+      }
+
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+      }
+
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+      .picMetadata {
+        color: rgb(63, 63, 63);
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 10px;
+        width: 100%;
+        text-align: start;
+        position: relative; /* Add this to position the X button relative to this container */
+        display: flex; /* Use flexbox for alignment */
+        align-items: center; /* Center items vertically */
+      }
+
+      .picMetadata:hover {
+        background-color: #d1e6b7;
+      }
+
+      .delete-button {
+        position: absolute;
+        right: 15px; /* Position from the right with some margin */
+        background-color: #ff3b30; /* Red color */
+        color: white;
+        border: none;
+        border-radius: 50%; /* Make it circular */
+        width: 24px;
+        height: 24px;
+        font-size: 14px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin-left: 10px;
+      }
+
+      .delete-button:hover {
+        background-color: #d9302c; /* Darker red on hover */
+      }
+
+      /* Add this to ensure the image and text stay aligned properly */
+      .pic-content {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>PICAPI</h1>
     <h2>Image Upload</h2>
-    
+
     <div id="drop-area">
-        <p>Drag and drop images here</p>
-        <p>or</p>
-        <input type="file" id="file-input" accept="image/*" multiple>
-        <button id="upload-button">Select Files</button>
+      <p>Drag and drop images here</p>
+      <p>or</p>
+      <input type="file" id="file-input" accept="image/*" multiple />
+      <button id="upload-button">Select Files</button>
     </div>
-    
-    <div id="status" style="display: none;"></div>
+
+    <div id="status" style="display: none"></div>
     <div id="piclist"></div>
-    
+
     <script>
-        // DOM Elements
-        const dropArea = document.getElementById('drop-area');
-        const fileInput = document.getElementById('file-input');
-        const uploadButton = document.getElementById('upload-button');
-        const status = document.getElementById('status');
-        const piclist = document.getElementById('piclist');
-        
-        // API endpoint
-        // DEVELOMENT
-        // const API_URL_UPLOAD = 'http://localhost:5000/api/upload';
-        // const API_URL_DELETE = 'http://localhost:5000/api/delete';
-        // const API_URL_GET = 'http://localhost:5000/api/getallpicmetadata';
-        // const API_URL_PIC = 'http://localhost:5000/api/pics/';
-        // PRODUCTION
-        const API_URL_UPLOAD = 'https://picapi.janharkonen.fi/api/upload';
-        const API_URL_DELETE = 'https://picapi.janharkonen.fi/api/delete';
-        const API_URL_GET = 'https://picapi.janharkonen.fi/api/getallpicmetadata';
-        const API_URL_PIC = 'https://picapi.janharkonen.fi/api/pics/';
-        
-        function getPublicKey() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('publicKey');
-        }
-        const publicKey = getPublicKey();
-        
-        // Handle drag and drop events
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropArea.addEventListener(eventName, preventDefaults, false);
-        });
-        
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        
-        // Highlight drop area when dragging files over it
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropArea.addEventListener(eventName, highlight, false);
-        });
-        
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropArea.addEventListener(eventName, unhighlight, false);
-        });
-        
-        function highlight() {
-            dropArea.classList.add('highlight');
-        }
-        
-        function unhighlight() {
-            dropArea.classList.remove('highlight');
-        }
-        
-        // Handle dropped files
-        dropArea.addEventListener('drop', handleDrop, false);
-        
-        displayUploadedPics();
+      // DOM Elements
+      const dropArea = document.getElementById("drop-area");
+      const fileInput = document.getElementById("file-input");
+      const uploadButton = document.getElementById("upload-button");
+      const status = document.getElementById("status");
+      const piclist = document.getElementById("piclist");
 
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            handleFiles(files);
-        }
-        
-        // Handle selected files from the file input
-        uploadButton.addEventListener('click', () => {
-            fileInput.click();
-        });
-        
-        fileInput.addEventListener('change', () => {
-            handleFiles(fileInput.files);
-        });
-        
-        // Process the selected files
-        function handleFiles(files) {
-            const filesArray = Array.from(files);
-            // Upload the images
-            filesArray.forEach(uploadFile);
-        }
-        
-        // Upload the file to the server
-        function uploadFile(file) {
-            if (publicKey) {
-                if (!file.type.match('image.*')) {
-                    showStatus('Only image files are allowed', 'error');
-                    return;
-                }
-                
+      // API endpoint
+      // DEVELOMENT
+      // const API_URL_UPLOAD = 'http://localhost:5000/api/upload';
+      // const API_URL_DELETE = 'http://localhost:5000/api/delete';
+      // const API_URL_GET = 'http://localhost:5000/api/getallpicmetadata';
+      // const API_URL_PIC = 'http://localhost:5000/api/pics/';
+      // PRODUCTION
+      const API_URL_UPLOAD = "https://picapi.janharkonen.fi/api/upload";
+      const API_URL_DELETE = "https://picapi.janharkonen.fi/api/delete";
+      const API_URL_GET = "https://picapi.janharkonen.fi/api/getallpicmetadata";
+      const API_URL_PIC = "https://picapi.janharkonen.fi/api/pics/";
 
-                const formData = new FormData();
-                formData.append('image', file);
-                
-                if (publicKey) {
-                    formData.append('publicKey', publicKey);
-                }
-                
-                fetch(API_URL_UPLOAD, {
-                    method: 'POST',
-                body: formData
+      function getPublicKey() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("publicKey");
+      }
+      const publicKey = getPublicKey();
+
+      // Handle drag and drop events
+      ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+      });
+
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      // Highlight drop area when dragging files over it
+      ["dragenter", "dragover"].forEach((eventName) => {
+        dropArea.addEventListener(eventName, highlight, false);
+      });
+
+      ["dragleave", "drop"].forEach((eventName) => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+      });
+
+      function highlight() {
+        dropArea.classList.add("highlight");
+      }
+
+      function unhighlight() {
+        dropArea.classList.remove("highlight");
+      }
+
+      // Handle dropped files
+      dropArea.addEventListener("drop", handleDrop, false);
+
+      displayUploadedPics();
+
+      function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles(files);
+      }
+
+      // Handle selected files from the file input
+      uploadButton.addEventListener("click", () => {
+        fileInput.click();
+      });
+
+      fileInput.addEventListener("change", () => {
+        handleFiles(fileInput.files);
+      });
+
+      // Process the selected files
+      function handleFiles(files) {
+        const filesArray = Array.from(files);
+        // Upload the images
+        filesArray.forEach(uploadFile);
+      }
+
+      // Upload the file to the server
+      function uploadFile(file) {
+        if (publicKey) {
+          if (!file.type.match("image.*")) {
+            showStatus("Only image files are allowed", "error");
+            return;
+          }
+
+          const formData = new FormData();
+          formData.append("image", file);
+
+          if (publicKey) {
+            formData.append("publicKey", publicKey);
+          }
+
+          fetch(API_URL_UPLOAD, {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => {
+              // Parse the JSON response regardless of status code
+              return response.json().then((data) => {
+                // Add status to the data object
+                return { ...data, status: response.status, ok: response.ok };
+              });
             })
-            .then(response => {
-                // Parse the JSON response regardless of status code
-                return response.json().then(data => {
-                    // Add status to the data object
-                    return { ...data, status: response.status, ok: response.ok };
-                });
+            .then((data) => {
+              if (!data.ok) {
+                // Handle error responses (4xx, 5xx)
+                throw new Error(data.error || "Upload failed");
+              }
+              showStatus(
+                `Image uploaded successfully: ${data.message || "Success"}`,
+                "success",
+              );
+              displayUploadedPics();
             })
-            .then(data => {
-                if (!data.ok) {
-                    // Handle error responses (4xx, 5xx)
-                    throw new Error(data.error || 'Upload failed');
-                }
-                showStatus(`Image uploaded successfully: ${data.message || 'Success'}`, 'success');
-                displayUploadedPics()
+            .catch((error) => {
+              showStatus(`Upload failed: ${error.message}`, "error");
+              console.error("Error:", error);
+            });
+        } else {
+          showStatus(`Upload failed: No public Key`, "error");
+        }
+      }
+      // Display status messages
+      function showStatus(message, type) {
+        status.textContent = message;
+        status.className = type;
+        status.style.display = "block";
+
+        // Hide the status after 5 seconds
+        setTimeout(() => {
+          status.style.display = "none";
+        }, 5000);
+      }
+      // Display uploaded pics
+      function displayUploadedPics() {
+        piclist.innerHTML = "";
+        fetch(API_URL_GET, {
+          method: "GET",
+          payload: "hash123123123",
+        })
+          .then((response) => {
+            return response.json().then((data) => {
+              data.forEach((row, i) => {
+                const piclistItem = document.createElement("li");
+
+                const piclistItemButton = document.createElement("button");
+                const textContent = document.createTextNode(
+                  String(i + 1) + ". " + row["original_filename"],
+                );
+                piclistItemButton.id = row["uuid"];
+                piclistItemButton.className = "picMetadata";
+                piclistItemButton.onclick = (e) => {
+                  // Only copy to clipboard if not clicking the delete button
+                  if (!e.target.classList.contains("delete-button")) {
+                    copyImageLinkToClipboard(row["uuid"]);
+                  }
+                };
+
+                // Create a container for pic content
+                const picContentDiv = document.createElement("div");
+                picContentDiv.className = "pic-content";
+
+                const piclistItemImg = document.createElement("img");
+                piclistItemImg.src = `${API_URL_PIC}${row["uuid"]}`;
+
+                // Add the delete button
+                const deleteButton = document.createElement("button");
+                deleteButton.innerHTML = "X";
+                deleteButton.className = "delete-button";
+                deleteButton.onclick = (e) => {
+                  e.stopPropagation(); // Prevent the parent button click
+                  deleteImage(row["uuid"]);
+                };
+
+                picContentDiv.appendChild(piclistItemImg);
+                picContentDiv.appendChild(textContent);
+
+                piclistItemButton.appendChild(picContentDiv);
+                piclistItemButton.appendChild(deleteButton);
+
+                piclistItem.appendChild(piclistItemButton);
+                piclist.appendChild(piclistItem);
+              });
+            });
+          })
+          .catch((error) => {
+            showStatus(`Item fetching failed: ${error.message}`, "error");
+            console.error("Error:", error);
+          });
+      }
+
+      function copyImageLinkToClipboard(uuid) {
+        const imageUrl = `${API_URL_PIC}${uuid}`;
+        navigator.clipboard
+          .writeText(imageUrl)
+          .then(() => {
+            showStatus(`URL copied to clipboard: ${imageUrl}`, "success");
+          })
+          .catch((err) => {
+            showStatus("Failed to copy URL to clipboard", "error");
+            console.error("Error copying text: ", err);
+          });
+      }
+
+      function deleteImage(uuid) {
+        if (publicKey) {
+          fetch(`${API_URL_DELETE}/${uuid}`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ publicKey }),
+          })
+            .then((response) => {
+              // Parse the JSON response regardless of status code
+              return response.json().then((data) => {
+                // Add status to the data object
+                return { ...data, status: response.status, ok: response.ok };
+              });
             })
-            .catch(error => {
-                    showStatus(`Upload failed: ${error.message}`, 'error');
-                    console.error('Error:', error);
-                });
-            } else {
-                showStatus(`Upload failed: No public Key`, 'error');
-            }
-        
-        }
-        // Display status messages
-        function showStatus(message, type) {
-            status.textContent = message;
-            status.className = type;
-            status.style.display = 'block';
-            
-            // Hide the status after 5 seconds
-            setTimeout(() => {
-                status.style.display = 'none';
-            }, 5000);
-        }
-        // Display uploaded pics
-        function displayUploadedPics() {
-            piclist.innerHTML = '';
-            fetch(API_URL_GET, {
-                method: 'GET',
-                payload: 'hash123123123'
+            .then((data) => {
+              if (!data.ok) {
+                // Handle error responses (4xx, 5xx)
+                throw new Error(data.error || "Upload failed");
+              }
+              showStatus(
+                `Image deleted successfully: ${data.message || "Success"}`,
+                "success",
+              );
+              displayUploadedPics();
             })
-            .then(response => {
-                return response.json().then(data => {
-                    data.forEach((row, i) => {
-                        const piclistItem = document.createElement('li');
-
-                        const piclistItemButton = document.createElement('button');
-                        const textContent = document.createTextNode(String(i+1) + '. ' + row['original_filename']);
-                        piclistItemButton.id = row['uuid'];
-                        piclistItemButton.className = 'picMetadata';
-                        piclistItemButton.onclick = (e) => {
-                            // Only copy to clipboard if not clicking the delete button
-                            if (!e.target.classList.contains('delete-button')) {
-                                copyImageLinkToClipboard(row['uuid']);
-                            }
-                        };
-                    
-                        // Create a container for pic content
-                        const picContentDiv = document.createElement('div');
-                        picContentDiv.className = 'pic-content';
-
-                        const piclistItemImg = document.createElement('img');
-                        piclistItemImg.src = `${API_URL_PIC}${row['uuid']}`;
-
-                        // Add the delete button
-                        const deleteButton = document.createElement('button');
-                        deleteButton.innerHTML = 'X';
-                        deleteButton.className = 'delete-button';
-                        deleteButton.onclick = (e) => {
-                            e.stopPropagation(); // Prevent the parent button click
-                            deleteImage(row['uuid']);
-                        };
-
-                        picContentDiv.appendChild(piclistItemImg);
-                        picContentDiv.appendChild(textContent);
-
-                        piclistItemButton.appendChild(picContentDiv);
-                        piclistItemButton.appendChild(deleteButton);
-
-                        piclistItem.appendChild(piclistItemButton);
-                        piclist.appendChild(piclistItem);
-                    });
-                });
-            })
-    .catch(error => {
-        showStatus(`Item fetching failed: ${error.message}`, 'error');
-        console.error('Error:', error);
-    });
-}
-
-        function copyImageLinkToClipboard(uuid) {
-            const imageUrl = `${API_URL_PIC}${uuid}`;
-            navigator.clipboard.writeText(imageUrl)
-                .then(() => {
-                    showStatus(`URL copied to clipboard: ${imageUrl}`, 'success');
-                })
-                .catch(err => {
-                    showStatus('Failed to copy URL to clipboard', 'error');
-                    console.error('Error copying text: ', err);
-                });
+            .catch((error) => {
+              showStatus(`Delete failed: ${error.message}`, "error");
+              console.error("Error:", error);
+            });
+        } else {
+          showStatus(`Delete failed: No public Key`, "error");
         }
-
-        function deleteImage(uuid) {
-            if (publicKey) {
-                fetch(`${API_URL_DELETE}/${uuid}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ publicKey })
-                })
-                .then(response => {
-                    // Parse the JSON response regardless of status code
-                    return response.json().then(data => {
-                        // Add status to the data object
-                        return { ...data, status: response.status, ok: response.ok };
-                    });
-                })
-                .then(data => {
-                    if (!data.ok) {
-                        // Handle error responses (4xx, 5xx)
-                        throw new Error(data.error || 'Upload failed');
-                    }
-                    showStatus(`Image deleted successfully: ${data.message || 'Success'}`, 'success');
-                    displayUploadedPics()
-                })
-                .catch(error => {
-                    showStatus(`Delete failed: ${error.message}`, 'error');
-                    console.error('Error:', error);
-                });
-            } else {
-                showStatus(`Delete failed: No public Key`, 'error');
-            }
-        }
+      }
     </script>
-</body>
+  </body>
 </html>
