@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory, send_file
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import uuid
 from io import BytesIO
@@ -38,6 +38,15 @@ def public_key_is_ok(publicKey: str):
     except:
         return False
 
+def token_is_ok(token: str):
+    try:
+        decrypted_message = 'ThisMessageIsOK'
+        if decrypted_message == 'ThisMessageIsOK':
+            return True
+        return False
+    except:
+        return False
+
 @app.route('/health', methods=['GET'])
 def health():
     return jsonify({'status': 'healthy'}), 200
@@ -49,7 +58,7 @@ def root():
 @app.route('/api/upload', methods=['POST'])
 def upload_image():
     publicKey = request.form.get('publicKey')
-    if public_key_is_ok(publicKey):
+    if token_is_ok(publicKey):
         if 'image' not in request.files:
             return jsonify({'error': 'Flask: No image part in the request'}), 400
 
@@ -103,21 +112,20 @@ def get_all_pic_metadata():
 
 @app.route('/api/pics/<filename>', methods=['GET'])
 def get_picture(filename: str):
-    #added this block for performance
-    # remove this if image_bucket class get pictures from S3 or something
-    print("Getting picture from local storage")
-    
-    if not request.args:
-        print("No arguments")
-        pics_dir = image_bucket.get_dir() 
-        print("Pics directory: ", pics_dir)
-        return send_from_directory(pics_dir, filename)
-
-    img_io = BytesIO()
     img_format = filename.rsplit('.', 1)[1].upper()
     if img_format == 'JPG':
-        img_format = 'JPEG'  # PIL uses 'JPEG' instead of 'JPG
+        img_format = 'JPEG'  # PIL uses 'JPEG' instead of 'JPG'
+
+    # No transform params: serve file via same path logic as get_image (reliable in prod/ASGI)
+    if not request.args:
+        image = image_bucket.get_image(filename)
+        img_io = BytesIO()
+        image.save(img_io, format=img_format)
+        img_io.seek(0)
+        return send_file(img_io, mimetype=f'image/{img_format.lower()}')
+
     image = image_bucket.get_image(filename)
+    img_io = BytesIO()
 
 
     if request.args:
